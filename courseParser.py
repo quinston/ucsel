@@ -10,6 +10,7 @@ Capture groups:
  * may include offering schedule (starts with "[Offered:")
 * Additional info, including:
  * Notes (start with "[Note:")
+  * may include offering schedule
  * Prereqs (start with "Prereq:")
  * Antireqs (start with "Antireq:")
  * "Department Consent Required" (as printed)
