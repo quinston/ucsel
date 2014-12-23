@@ -7,11 +7,14 @@ Capture groups:
 * Course ID (6 digits?)
 * Course name
 * Course description
+ * may include offering schedule (starts with "[Offered:")
 * Additional info, including:
  * Notes (start with "[Note:")
  * Prereqs (start with "Prereq:")
  * Antireqs (start with "Antireq:")
  * "Department Consent Required" (as printed)
+ * "Only offered Online"
+ * "Also offered Online"
 """
 
 
