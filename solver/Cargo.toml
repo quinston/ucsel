@@ -1,0 +1,5 @@
+[package]
+
+name = "solver"
+version = "0.0.1"
+authors = ["quinston <lklq@live.com>"]
