@@ -3,3 +3,8 @@
 name = "solver"
 version = "0.0.1"
 authors = ["quinston <lklq@live.com>"]
+
+[dependencies.rust-graph]
+
+git = "https://github.com/niax/rust-graph.git"
+

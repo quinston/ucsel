@@ -1,4 +1,12 @@
 [root]
 name = "solver"
 version = "0.0.1"
+dependencies = [
+ "rust-graph 0.0.1 (git+https://github.com/niax/rust-graph.git)",
+]
+
+[[package]]
+name = "rust-graph"
+version = "0.0.1"
+source = "git+https://github.com/niax/rust-graph.git#e2c59045ed8d35307b969bee5f9beb60c3cb9ffa"
 

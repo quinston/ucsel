@@ -1,3 +1,4 @@
-mod course;
-mod search;
+pub mod requirement;
+pub mod course;
+pub mod search;
 
