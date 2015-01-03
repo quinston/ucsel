@@ -19,9 +19,14 @@ Capture groups:
 """
 
 
-wholePattern = re.compile(r"""<center><table border=0 width=80%><tr><td align=left><B><a name = "(?P<courseCode>[A-Z0-9]+)"></a>(?P<components>[^<]+)</b></td><td align=right>Course ID: (?P<courseID>\d+)</td></tr><tr><td colspan=2><b>(?P<courseName>[^<]+)</B></td></tr><tr><td colspan=2>(?P<courseDesc>[^<]+)</td></tr>((?:<tr><td colspan=2><i>[^<]*</i></td></tr>)*)<p></table></center>""")
+wholePattern = re.compile(r"""<center><table border=0 width=80%><tr><td align=left><b><a name = "(?P<courseCode>[A-Z0-9]+)"></a>(?P<components>[^<]+)</b></td><td align=right>Course ID: (?P<courseID>\d+)</td></tr><tr><td colspan=2><b>(?P<courseName>[^<]+)</b></td></tr><tr><td colspan=2>(?P<courseDesc>[^<]+)</td></tr>((?:<tr><td colspan=2><i>[^<]*</i></td></tr>)*)""")
 notePattern = re.compile(r"<i>([^<]*)</i>")
 
+def normalizeHtml(html):
+ # Lowecase tag names
+ tagPattern = re.compile(r"<(/?\w+)((?: [^>]*)?)>")
+ return tagPattern.sub(lambda m: "<" + m.group(1).lower() + m.group(2) + ">", html)
 
 def extractCourseInfo(html):
+ html = normalizeHtml(html)
  return [x[:-1] + tuple([notePattern.findall(x[-1])]) for x in wholePattern.findall(html)]

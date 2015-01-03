@@ -1,4 +1,5 @@
 import urllib.request
+import re
 from html.parser import HTMLParser
 
 def fetchHtmlInSubject(subject):
@@ -6,6 +7,7 @@ def fetchHtmlInSubject(subject):
 	url = "http://ugradcalendar.uwaterloo.ca/courses/{}".format(subject)
 	response = urllib.request.urlopen(url)
 	data = response.read()
+
 	return data.decode()
 
 def getCourseTableTags(html):
