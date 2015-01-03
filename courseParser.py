@@ -27,6 +27,10 @@ def normalizeHtml(html):
  tagPattern = re.compile(r"<(/?\w+)((?: [^>]*)?)>")
  return tagPattern.sub(lambda m: "<" + m.group(1).lower() + m.group(2) + ">", html)
 
+"""
+Returns a list of tuples like this:
+("ABC101", "ABC 101 LEC 0.50", "110103", "Course Name", "Course descrption goes here.", ["Note 1", "Note 2"])
+"""
 def extractCourseInfo(html):
  html = normalizeHtml(html)
  return [x[:-1] + tuple([notePattern.findall(x[-1])]) for x in wholePattern.findall(html)]
