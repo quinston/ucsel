@@ -19,9 +19,4 @@ Capture groups:
 """
 
 
-pattern = r"""<center><table border=0 width=80%><tr><td align=left><B><a name = "(?P<courseCode>[A-Z0-9]+)"></a>(?P<components>[^<]+)</b></td><td align=right>Course ID: (?P<courseID>\d+)</td></tr><tr><td colspan=2><b>(?P<courseName>[^<]+)</B></td></tr><tr><td colspan=2>(?P<courseDesc>[^<]+)</td></tr>(?:<tr><td colspan=2><i>([^<]*)</i></td></tr>)*<p></table></center>"""
-
-
-reObj = re.compile(pattern)
-
-
+wholePattern = re.compile(r"""<center><table border=0 width=80%><tr><td align=left><B><a name = "(?P<courseCode>[A-Z0-9]+)"></a>(?P<components>[^<]+)</b></td><td align=right>Course ID: (?P<courseID>\d+)</td></tr><tr><td colspan=2><b>(?P<courseName>[^<]+)</B></td></tr><tr><td colspan=2>(?P<courseDesc>[^<]+)</td></tr>(?:<tr><td colspan=2><i>([^<]*)</i></td></tr>)*<p></table></center>""")
