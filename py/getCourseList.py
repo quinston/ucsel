@@ -7,6 +7,7 @@ uwaterlooDatasetsRepo = "https://github.com/uWaterloo/Datasets.git"
 subjectAndNumberPatt = re.compile(r'^"([A-Z]+)","([A-Z0-9]+)".*$')
 
 def getCourseList():
+ ret = []
  # tmpDir is a str
  tmpDir = tempfile.mkdtemp()
  subprocess.call("git clone {} {}".format(uwaterlooDatasetsRepo, tmpDir).split(' '))
@@ -25,5 +26,6 @@ def getCourseList():
    except:
     print(line)
     raise
-   print(subject, number)
+   ret.append((subject,number))
   csv.close()
+ return ret
