@@ -4,7 +4,7 @@ import getCourseList
 
 
 apiUrl = "https://api.uwaterloo.ca/v2/courses/{subject}/{catalogueNumber}/prerequisites.json?key={key}"
-dataDirectory = "../data"
+dataDirectory = "../data/prerequisites"
 
 """
 key: Waterloo OpenData API key
