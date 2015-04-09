@@ -15,7 +15,10 @@ find_program (PYTHON3 python3)
 message(STATUS ${ucsel_SOURCE_DIR}/lib)
 find_library(ORTOOLS_LIBRARY ortools PATHS ${ucsel_SOURCE_DIR}/lib)
 
+include_directories(${ucsel_SOURCE_DIR}/include)
 
 target_link_libraries (ucsel ${ORTOOLS_LIBRARY})
 
-
+find_package(Guile REQUIRED)
+include_directories(ucsel ${GUILE_INCLUDE_DIRS})
+target_link_libraries(ucsel ${GUILE_LIBRARIES})
