@@ -10,7 +10,18 @@ using operations_research::IntVar;
 using operations_research::Constraint;
 using std::cout;
 
+void add_season_constraint();
+
+/**
+solve: (listof Course) (listof Term) -> (union Solution #f)
+*/
+static SCM solve(SCM courseList, SCM termList) {
+ return SCM_BOOL_F;
+}
+
+
 static void inner_main(void *data, int argc, char **argv) {
+ scm_c_define_gsubr("solve", 2, 0, 0, (SCM (*)()) solve);
  scm_shell (argc, argv);
 }
 
