@@ -8,7 +8,7 @@ add_executable (ucsel main.cpp)
 set_target_properties(ucsel PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${ucsel_SOURCE_DIR}/bin)
 
 message (STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11")
+add_definitions(-std=c++11 -Wall)
 
 find_program (PYTHON3 python3)
 
@@ -19,6 +19,7 @@ include_directories(${ucsel_SOURCE_DIR}/include)
 
 target_link_libraries (ucsel ${ORTOOLS_LIBRARY})
 
-find_package(Guile REQUIRED)
+
+find_package(Guile 2.0 REQUIRED)
 include_directories(ucsel ${GUILE_INCLUDE_DIRS})
 target_link_libraries(ucsel ${GUILE_LIBRARIES})
