@@ -93,14 +93,25 @@ static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg
 			ivOther = getNamedIntVar(strOtherName);
 			solver.AddConstraint(solver.MakeNonEquality (iv, ivOther));
 		}
+		else {
+			scm_wrong_type_arg_msg(thisMethodName, 3, arg, "one of: integer, string");
+		}
 	}
 	else if (strType == "prereq") {
-		SCM_ASSERT_TYPE(scm_is_string(arg), arg, 3, thisMethodName, "string");
-		szOtherName = scm_to_locale_string(arg);
-		scm_dynwind_free(szOtherName);
-		strOtherName = string (szOtherName);
-		ivOther = getNamedIntVar(strOtherName);
-		solver.AddConstraint (solver.MakeLess(iv, ivOther));
+		SCM_ASSERT (scm_is_integer (arg) || scm_is_string(arg), arg, 3, thisMethodName);
+		if (scm_is_string(arg)) {
+			szOtherName = scm_to_locale_string(arg);
+			scm_dynwind_free(szOtherName);
+			strOtherName = string (szOtherName);
+			ivOther = getNamedIntVar(strOtherName);
+			solver.AddConstraint (solver.MakeLess(iv, ivOther));
+		}
+		else if (scm_is_integer (arg)) {
+			solver.AddConstraint(solver.MakeLess(iv, scm_to_uint8(arg)));
+		}
+		else {
+			scm_wrong_type_arg_msg(thisMethodName, 3, arg, "one of: integer, string");
+		}
 	}
 	else {
 		scm_misc_error (thisMethodName, "Unsupported constraint type: ~s", type);

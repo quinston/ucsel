@@ -1,0 +1,2 @@
+(add-course-constraint 5 "prereq" "A" 3)
+(define a find-solution)

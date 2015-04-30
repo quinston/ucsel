@@ -2,3 +2,4 @@
 2. "prereq" constraint
 3. "prereq" constraint - there should be no solution possible
 4. "bad term" generalized - letting the argument be a string, i.e. a reference to an intvar
+5. "prereq "generalized - letting the argument be a number, i.e. a course by which a course should already have been taken
