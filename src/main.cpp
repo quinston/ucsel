@@ -113,6 +113,23 @@ static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg
 			scm_wrong_type_arg_msg(thisMethodName, 3, arg, "one of: integer, string");
 		}
 	}
+	else if (strType == "oneof") {
+		SCM_ASSERT_TYPE (scm_is_true(scm_list_p(arg)), arg, 3, thisMethodName, "list");
+		std::vector<IntVar*> disjugates = {iv};
+		while (!scm_is_null(arg)) {
+			SCM head = scm_list_ref(arg, scm_from_int8(0));
+			SCM_ASSERT_TYPE (scm_is_string(head), head, 3, thisMethodName, "list of string");
+			szOtherName = scm_to_locale_string(head);
+			scm_dynwind_free(szOtherName);
+			strOtherName = string (szOtherName);
+			disjugates.push_back(getNamedIntVar(strOtherName));
+			// Replace arg with (cdr arg)
+			arg = scm_list_tail(arg, scm_from_int8(1));
+		}
+		// Check that they are not all equal to noTerms
+		solver.AddConstraint(solver.MakeLess(solver.MakeSum(disjugates),
+											(int) (disjugates.size() * ucNoTerms)));
+	}
 	else {
 		scm_misc_error (thisMethodName, "Unsupported constraint type: ~s", type);
 		return SCM_BOOL_F;

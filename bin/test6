@@ -1,0 +1,2 @@
+(add-course-constraint 2 "oneof" "A" '("B" "C"))
+(define a find-solution)
