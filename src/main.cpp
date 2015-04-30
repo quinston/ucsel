@@ -3,6 +3,7 @@
 #include<string>
 #include<map>
 #include<algorithm>
+#include<functional>
 #include<libguile.h>
 #include "base/logging.h"
 #include "constraint_solver/constraint_solver.h"
@@ -45,6 +46,10 @@ static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg
 	unsigned char ucNoTerms;
 	unsigned char badTerm;
 	IntVar* iv;
+	char* szLaterName;
+	string strLaterName;
+	IntVar* ivLater;
+	std::function<IntVar*(string)> getNamedIntVar;
 
 	SCM_ASSERT_TYPE (scm_is_integer (noTerms), noTerms, 0, thisMethodName, "int");
 	SCM_ASSERT_TYPE (scm_is_string (type), type, 1, thisMethodName, "string");
@@ -60,21 +65,35 @@ static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg
 	strName = string (szName);
 	strType = string (szType);
 
-	if (cm.find (strName) == cm.end()) {
-		/*
-		Convention: If a course has value noTerms, then it is not being taken.
+	getNamedIntVar = [ucNoTerms](const string&& name) {
+		if (cm.find(name) == cm.end()) {
+			/*
+			Convention: If a course has value \p noTerms, then it is not being taken.
 
-		*/
-		iv = cm[strName] = solver.MakeIntVar (0, ucNoTerms, strName);
-	} else {
-		iv = cm.find (strName)->second;
-	}
+			*/
+			return cm[name] = solver.MakeIntVar (0, ucNoTerms, name);
+		}
+		else {
+			return cm.find (name)->second;
+		}
+	};
+	iv = getNamedIntVar(strName);
+
 
 	if (strType == "bad term") {
 		SCM_ASSERT_TYPE (scm_is_integer (arg), arg, 3, thisMethodName, "int");
 		badTerm = scm_to_uint8 (arg);
 		solver.AddConstraint (solver.MakeNonEquality (iv, badTerm));
-	} else {
+	}
+	else if (strType == "prereq") {
+		SCM_ASSERT_TYPE(scm_is_string(arg), arg, 3, thisMethodName, "string");
+		szLaterName = scm_to_locale_string(arg);
+		scm_dynwind_free(szLaterName);
+		strLaterName = string (szLaterName);
+		ivLater = getNamedIntVar(strLaterName);
+		solver.AddConstraint (solver.MakeLess(iv, ivLater));
+	}
+	else {
 		scm_misc_error (thisMethodName, "Unsupported constraint type: ~s", type);
 		return SCM_BOOL_F;
 	}
@@ -99,9 +118,12 @@ SCM find_solution()
 		solver.NewSearch (db);
 	}
 
+	scm_simple_format(scm_current_error_port(),
+					scm_from_utf8_string("Solving with ~A variables\n"),
+					scm_list_n(scm_from_uint64(vars.size()), SCM_UNDEFINED));
+
 	if (solver.NextSolution()) {
 		SCM result = scm_list_n (SCM_UNDEFINED);
-		scm_write_line (scm_from_int32 (vars.size()), scm_current_error_port());
 
 		for (const IntVar* var : vars) {
 			/* Assignment is necessary since scm_assoc_set_x may or may
