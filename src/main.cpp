@@ -46,9 +46,9 @@ static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg
 	unsigned char ucNoTerms;
 	unsigned char badTerm;
 	IntVar* iv;
-	char* szLaterName;
-	string strLaterName;
-	IntVar* ivLater;
+	char* szOtherName;
+	string strOtherName;
+	IntVar* ivOther;
 	std::function<IntVar*(string)> getNamedIntVar;
 
 	SCM_ASSERT_TYPE (scm_is_integer (noTerms), noTerms, 0, thisMethodName, "int");
@@ -81,17 +81,26 @@ static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg
 
 
 	if (strType == "bad term") {
-		SCM_ASSERT_TYPE (scm_is_integer (arg), arg, 3, thisMethodName, "int");
-		badTerm = scm_to_uint8 (arg);
-		solver.AddConstraint (solver.MakeNonEquality (iv, badTerm));
+		SCM_ASSERT (scm_is_integer (arg) || scm_is_string(arg), arg, 3, thisMethodName);
+		if (scm_is_integer (arg)) {
+			badTerm = scm_to_uint8 (arg);
+			solver.AddConstraint (solver.MakeNonEquality (iv, badTerm));
+		}
+		else if (scm_is_string(arg)) {
+			szOtherName = scm_to_locale_string(arg);
+			scm_dynwind_free(szOtherName);
+			strOtherName = string (szOtherName);
+			ivOther = getNamedIntVar(strOtherName);
+			solver.AddConstraint(solver.MakeNonEquality (iv, ivOther));
+		}
 	}
 	else if (strType == "prereq") {
 		SCM_ASSERT_TYPE(scm_is_string(arg), arg, 3, thisMethodName, "string");
-		szLaterName = scm_to_locale_string(arg);
-		scm_dynwind_free(szLaterName);
-		strLaterName = string (szLaterName);
-		ivLater = getNamedIntVar(strLaterName);
-		solver.AddConstraint (solver.MakeLess(iv, ivLater));
+		szOtherName = scm_to_locale_string(arg);
+		scm_dynwind_free(szOtherName);
+		strOtherName = string (szOtherName);
+		ivOther = getNamedIntVar(strOtherName);
+		solver.AddConstraint (solver.MakeLess(iv, ivOther));
 	}
 	else {
 		scm_misc_error (thisMethodName, "Unsupported constraint type: ~s", type);

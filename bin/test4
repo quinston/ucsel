@@ -1,0 +1,3 @@
+(add-course-constraint 2 "bad term" "A" 2)
+(add-course-constraint 2 "bad term" "B" "A")
+(define a find-solution)
