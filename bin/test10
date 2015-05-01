@@ -1,0 +1,2 @@
+(primitive-load "../scm/lang.scm")
+(parse '((!= "A" "B" 3 4 "C") (< "A" "B" "C" 3)) '(S W F S W))

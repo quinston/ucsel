@@ -49,9 +49,9 @@
    )
   )
  )
-))))]
-      )
-     ]
+))))] ; end !=
+      ) ; end match
+     ] ; end else
     )
    ))]
    (parse/k x identity)

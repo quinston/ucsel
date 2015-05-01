@@ -5,5 +5,6 @@
 5. "prereq "generalized - letting the argument be a number, i.e. a course by which a course should already have been taken
 6. "oneof"
 7. course load constraints
-8. parsing '((< a b c))
-9. parsing '((!= a b 1 2 ))
+8. parsing '(< a b c) 
+9. parsing '(!= a b 1 2 )
+10. parsing '((< ...) (!= ...))
