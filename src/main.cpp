@@ -16,9 +16,11 @@ using std::cout;
 using std::string;
 
 typedef std::map<string, IntVar*> CourseMap;
+typedef std::map<unsigned int, IntVar*> MaximumMap;
 
 Solver solver ("anonymous");
 CourseMap cm {};
+MaximumMap mm {};
 
 /**
 An internal method. Adds to the solver a variable named \p courseName.
@@ -140,24 +142,56 @@ static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg
 }
 
 /**
+An internal method. Adds a cap on the number of courses that can be taken in one term.
+
+In order to create this constraint, all the variables have to be created first.
+Hence the constraints are only made at the start of a solve.
+
+\param numTerm Term number (zero-indexed)
+\param maximumFrequency The maximum number of times this term number should appear i.e. the maximum number of courses that can be taken in the given term
+*/
+
+SCM add_load_cap(SCM numTerm, SCM maximumFrequency) {
+	const char thisMethodName[] = "add-load-cap";
+	SCM_ASSERT_TYPE(scm_is_integer(numTerm), numTerm, 0, thisMethodName, "integer");
+	SCM_ASSERT_TYPE(scm_is_integer(maximumFrequency), maximumFrequency, 1, thisMethodName, "integer");
+	mm[scm_to_uint64(numTerm)]
+	= solver.MakeIntVar(0,
+					scm_to_uint64(maximumFrequency),
+					"Term " + std::to_string(scm_to_uint64(numTerm)) + " Workload");
+	return scm_from_unsigned_integer(0);
+}
+
+/**
 Invokes the solver to find a solution.
 */
 SCM find_solution()
 {
+	std::vector<IntVar*> courseVars {};
+	std::vector<IntVar*> loadVars {};
 	std::vector<IntVar*> vars {};
-	std::transform (cm.begin(), cm.end(), std::back_inserter (vars), [] (const CourseMap::value_type & p) {
+
+	std::transform (cm.begin(), cm.end(), std::back_inserter (courseVars), [] (const CourseMap::value_type & p) {
 		return p.second;
 	});
+	std::transform (mm.begin(), mm.end(), std::back_inserter (loadVars), [] (const MaximumMap::value_type & p) {
+		return p.second;
+	});
+	std::copy(courseVars.begin(), courseVars.end(), std::back_inserter(vars));
+	std::copy(loadVars.begin(), loadVars.end(), std::back_inserter(vars));
+
 
 	if (solver.state() == Solver::OUTSIDE_SEARCH) {
 		scm_write_line(scm_from_utf8_string("Starting new solve\n"), scm_current_error_port());
+
+		/* Course load constraints */
+		for (auto p : mm) {
+			solver.AddConstraint(solver.MakeCount(courseVars, p.first, p.second));
+		}
+
 		DecisionBuilder* db = solver.MakePhase (vars, Solver::CHOOSE_RANDOM, Solver::ASSIGN_RANDOM_VALUE);
 		solver.NewSearch (db);
 	}
-
-	scm_simple_format(scm_current_error_port(),
-					scm_from_utf8_string("Solving with ~A variables\n"),
-					scm_list_n(scm_from_uint64(vars.size()), SCM_UNDEFINED));
 
 	if (solver.NextSolution()) {
 		SCM result = scm_list_n (SCM_UNDEFINED);
@@ -172,6 +206,7 @@ SCM find_solution()
 	} else {
 		solver.EndSearch();
 		cm.erase(cm.begin(), cm.end());
+		mm.erase(mm.begin(), mm.end());
 		return scm_throw (scm_from_utf8_symbol ("no-more"), scm_list_1 (scm_from_utf8_string ("No more solutions.")));
 	}
 }
@@ -181,6 +216,7 @@ static void inner_main (void* data, int argc, char** argv)
 {
 	scm_c_define_gsubr ("add-course-constraint", 4, 0, 0, (scm_t_subr) add_course_constraint);
 	scm_c_define_gsubr ("find-solution", 0, 0, 0, (scm_t_subr) find_solution);
+	scm_c_define_gsubr ("add-load-cap", 2, 0, 0, (scm_t_subr) add_load_cap);
 	scm_shell (argc, argv);
 }
 

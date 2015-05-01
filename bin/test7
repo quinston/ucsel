@@ -1,0 +1,11 @@
+(add-load-cap 1 2)
+(add-load-cap 0 1)
+(add-course-constraint 2 "bad term" "A" 1)
+(add-course-constraint 2 "bad term" "B" 1)
+(add-course-constraint 2 "oneof" "A" '("B"))
+
+(add-course-constraint 2 "bad term" "C" 0)
+(add-course-constraint 2 "bad term" "D" 0)
+(add-course-constraint 2 "bad term" "E" 0)
+(add-course-constraint 2 "oneof" "C" '("D" "E"))
+(define a find-solution)
