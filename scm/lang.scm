@@ -50,6 +50,9 @@
   )
  )
 ))))] ; end !=
+       [('!! ai ...) (parse/k (cdr x) (lambda (rst) (k 
+(append rst (fold (lambda (aj acc) (cons (list no-terms "bad term" aj no-terms) acc)) '() ai))
+)))] ; end !!
       ) ; end match
      ] ; end else
     )

@@ -8,3 +8,4 @@
 8. parsing '(< a b c) 
 9. parsing '(!= a b 1 2 )
 10. parsing '((< ...) (!= ...))
+11. parsing '(!! a b c)
