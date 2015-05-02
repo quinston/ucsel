@@ -14,6 +14,26 @@
 
 (use-modules (srfi srfi-1) (ice-9 match))
 
+(define subsets-size-n
+ (lambda (n l)
+  (letrec
+   [(subsets/k (lambda (n l k)
+    (cond
+     [(zero? n) (k '(()))]
+     [(null? l) (k '())]
+     [else (subsets/k (- n 1) (cdr l) (lambda (n-1-subsets) 
+      (subsets/k n (cdr l) (lambda (n-cdr-subsets)
+       (k (append (map (lambda (s) (cons (car l) s)) n-1-subsets)
+                  n-cdr-subsets           
+       ))
+      ) ; end 2nd lambda
+     ) ; end 2nd com/k
+    ) ; end 1st lambda
+   ) ; end 1st com/k
+  ])))]
+ (subsets/k n l identity)))
+ )
+
 (define parse
  (lambda (x study-terms)
   (letrec
