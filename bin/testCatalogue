@@ -9,3 +9,4 @@
 9. parsing '(!= a b 1 2 )
 10. parsing '((< ...) (!= ...))
 11. parsing '(!! a b c)
+12. parsing '((1 a  b c))

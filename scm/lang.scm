@@ -73,6 +73,7 @@
        [('!! ai ...) (parse/k (cdr x) (lambda (rst) (k 
 (append rst (fold (lambda (aj acc) (cons (list no-terms "bad term" aj no-terms) acc)) '() ai))
 )))] ; end !!
+       [(1 ai ...) (parse/k (cdr x) (lambda (rst) (k (cons (list no-terms "oneof" (car ai) (cdr ai)) rst))))] ; end oneof
       ) ; end match
      ] ; end else
     )
