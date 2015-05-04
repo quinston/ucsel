@@ -1,3 +1,10 @@
+/*!
+
+@file main.cpp
+
+Implements a small Scheme wrapper to OR tools.
+*/
+
 #include<iostream>
 #include<vector>
 #include<string>
@@ -22,23 +29,24 @@ Solver solver ("anonymous");
 CourseMap cm {};
 MaximumMap mm {};
 
-/**
-An internal method. Adds to the solver a variable named \p courseName.
+/*!  An internal method. Adds to the solver a variable named \p courseName.
 
-TODO: automatically up relevant restrictions, such as:
-* prerequisites
-* season of offering
+TODO: automatically up relevant restrictions, such as: 
+- prerequisites
+- season of offering
 
 \param noTerms The number of terms being considered
 \param type The type of constraint to add.
-
-Currently supported:
+ 
+ Currently supported:
 - "bad term": arg is a term in which this course shall not or cannot be taken
-
-\param courseName A course identifier in this format: "CODE-000" (e.g. "CS-100")
+- "oneof": arg is a list of courses which alongside the course \p courseName at least one course should be taken
+- "prereq": arg is a lsit of courses and/or term numbers that should occur after the given course \p courseName
+ 
+\param courseName A string identifying a course 
 \param arg Function depends on \p type
 */
-static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg)
+ SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg)
 {
 	const char thisMethodName[] = "add-course-constraint";
 	char* szType;
@@ -141,7 +149,7 @@ static SCM add_course_constraint (SCM noTerms, SCM type, SCM courseName, SCM arg
 	return scm_from_unsigned_integer (0);
 }
 
-/**
+/*!
 An internal method. Adds a cap on the number of courses that can be taken in one term.
 
 In order to create this constraint, all the variables have to be created first.
@@ -162,8 +170,8 @@ SCM add_load_cap(SCM numTerm, SCM maximumFrequency) {
 	return scm_from_unsigned_integer(0);
 }
 
-/**
-Invokes the solver to find a solution.
+/*!
+Invokes the solver to find a solution. Once the solutions are exhausted, it throws with key \p 'no-more a single argument containing an error message string.
 */
 SCM find_solution()
 {
