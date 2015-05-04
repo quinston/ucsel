@@ -144,3 +144,6 @@ This needs to be accomplished by creating a correspondence between every pair of
 
 * generalize "1-of" constraint to "n-of"
 
+Copyright
+--
+Where not otherwised specified, all source files are licensed under GPLv3. See `COPYING`.
