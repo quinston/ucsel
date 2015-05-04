@@ -1,0 +1,10 @@
+(load "../scm/lang.scm")
+(solve '(
+(< "A" "B" "C")
+(ssn "B" (W))
+(< "D" "E")
+(!! "A" "B" "C" "D" "E" "F")
+(!= "E" 1)
+)
+'(F W S)
+2)

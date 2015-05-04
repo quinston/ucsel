@@ -73,7 +73,23 @@
        [('!! ai ...) (parse/k (cdr x) (lambda (rst) (k 
 (append rst (fold (lambda (aj acc) (cons (list no-terms "bad term" aj no-terms) acc)) '() ai))
 )))] ; end !!
-       [(1 ai ...) (parse/k (cdr x) (lambda (rst) (k (cons (list no-terms "oneof" (car ai) (cdr ai)) rst))))] ; end oneof
+       [(1 (? string? ai) ...) (parse/k (cdr x) (lambda (rst) (k (cons (list no-terms "oneof" (car ai) (cdr ai)) rst))))] ; end oneof
+       [('ssn (? string? a1) (? list? seasons)) (parse/k (cdr x) (lambda (rst) (k (append rst (fold (lambda (n acc) (cons (list no-terms "bad term" a1 n) acc)) ; end lambda
+'()
+; The below finds the terms occurring in seasons that are not in the list "seasons"
+(fold 
+(lambda (n season acc) 
+(cond
+[(not (member season seasons)) (cons n acc)]
+[else acc])
+ ) ; end lambda
+ '() (iota no-terms) study-terms) ; end inner fold
+ ) ; end fold
+) ; end append
+) ; end k call
+) ; end lambda
+) ; end parse/k
+] ; end ssn
       ) ; end match
      ] ; end else
     )
@@ -82,3 +98,20 @@
   )
  )
 )
+
+#|
+\param constraint-lang A list of constraints specified in the microlanguage 
+\param study-terms A list of the symbols 'S, 'W, 'F representing the seasons of remaining study terms.
+\param  course-load-cap An integer specifying the maximum number of courses to enrol in in any given term. 
+|# 
+(define solve 
+(lambda (constraints study-terms course-load-cap)
+ (begin 
+  (for-each (lambda (x) (apply add-course-constraint x)) (parse constraints study-terms))
+  (for-each (lambda (n) (add-load-cap n course-load-cap)) (iota (length study-terms)))
+  (catch 'no-more 
+(lambda () (begin (while #t (display (find-solution)) (newline)))) 
+(lambda (key . args) (begin (display (car args)) (newline)))
+) ; end catch
+) ; end begin
+))

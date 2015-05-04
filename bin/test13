@@ -1,0 +1,5 @@
+(load "../scm/lang.scm")
+(parse '((ssn "A" (S)))
+'(F W S S W S)
+
+)

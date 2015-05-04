@@ -10,3 +10,5 @@
 10. parsing '((< ...) (!= ...))
 11. parsing '(!! a b c)
 12. parsing '((1 a  b c))
+13. parsing '((ssn (F W)))
+14. a typical use test

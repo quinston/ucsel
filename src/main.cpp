@@ -196,7 +196,7 @@ SCM find_solution()
 	if (solver.NextSolution()) {
 		SCM result = scm_list_n (SCM_UNDEFINED);
 
-		for (const IntVar* var : vars) {
+		for (const IntVar* var : courseVars) {
 			/* Assignment is necessary since scm_assoc_set_x may or may
 			not mutate the given list. */
 			result = scm_assoc_set_x (result, scm_from_locale_string (var->name().c_str()), scm_from_int64 (var->Value()));
