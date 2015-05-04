@@ -29,9 +29,9 @@ make
 
 Operation
 --
-* `(< a1 a2 a3)` Represents a prerequisite chain. `a1`, `a2`, ... can each be integers or strings. For instance `(< "A" 2 "C")` means course A must be taken before term 2 and course C must be taken after term 2.
-* `(!= a1 a2 a3)` Represents an inequality constraint. `a1`, `a2`, ... can be integers or strings. `(!= 0 "A" "C") means courses A and C must not be taken in the same term, nor in term 0.
-* `(!! a1 a2 a3)` Must-take courses. `a1`, `a2`, ... are strings.
+* `('< a1 a2 a3)` Represents a prerequisite chain. `a1`, `a2`, ... can each be integers or strings. For instance `(< "A" 2 "C")` means course A must be taken before term 2 and course C must be taken after term 2.
+* `('!= a1 a2 a3)` Represents an inequality constraint. `a1`, `a2`, ... can be integers or strings. `(!= 0 "A" "C") means courses A and C must not be taken in the same term, nor in term 0.
+* `('!! a1 a2 a3)` Must-take courses. `a1`, `a2`, ... are strings.
 * `(1 a1 a2 a3)` At least one of `a1`, `a2`, ... shall be taken. `a1`, `a2`, ... are strings.
 * `('ssn a1 seasons)` Course `a1` must be taken in the given season(s). `a1` is a string. `seasons` is any subset of `'(F W S)`. 
 
