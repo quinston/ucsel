@@ -12,10 +12,14 @@ Dependencies
 * Google OR tools
 * Guile 2.0+
 
-The packaged Python scripts for parsing UWaterloo API data are written in Python 3.
+The packaged Python utility scripts for parsing UWaterloo API data are written in Python 3.
 
 Build
 --
+Put OR tools headers and shared object where CMake can find it. I'd suggest making a `./lib` folder for the shared object and a `./include` folder for the headers.
+
+ Then in the folder of the cloned repo, run:
+
 ```
 mkdir build
 cd build
