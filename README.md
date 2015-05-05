@@ -11,6 +11,7 @@ Dependencies
 
 * Google OR tools
 * Guile 2.0+
+* CMake 3+
 
 The packaged Python utility scripts for parsing UWaterloo API data are written in Python 3.
 
